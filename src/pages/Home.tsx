@@ -55,13 +55,18 @@ export const Home = () => {
 
             <h1>Bem vindo!</h1>
             <h2>Lista de avaliações</h2>
-            <button onClick={() => listarAvaliacoes()}>Atualizar lista</button>
 
             <ListaAvaliacoes avaliacoes={avaliacoes} />
 
             <br />
 
-            <button onClick={realizarLogout}>Sair</button>
+            <div>
+                <button onClick={() => listarAvaliacoes()}>Atualizar lista</button>
+                <button onClick={() => navigate("/avaliacao")}>Criar nova avaliação</button>
+            </div>
+            <div>
+                <button onClick={realizarLogout}>Sair</button>
+            </div>
         </>
     );
 };
