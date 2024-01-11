@@ -3,19 +3,37 @@ import { Header } from "../components/Header";
 import { ListaAvaliacoes } from "../components/ListaAvaliacoes";
 import { Avaliacao } from "../models/avaliacao.model";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { User } from "../models/user.model";
 
 export const Home = () => {
     const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
+    const [user, setUser] = useState<User>();
+
+    const usuarioLogado = localStorage.getItem("user");
+    const navigate = useNavigate();
 
     useEffect(() => {
-        listarAvaliacoes();
+        if (!usuarioLogado) {
+            alert("Sessão expirada, faça o login novamente!");
+            navigate("/login");
+            return;
+        }
+
+        setUser(JSON.parse(usuarioLogado));
     }, []);
+
+    useEffect(() => {
+        if (!user) {
+            return;
+        }
+
+        listarAvaliacoes();
+    }, [user]);
 
     const listarAvaliacoes = async () => {
         try {
-            const result = await axios.get(
-                "http://localhost:3335/aluno/3a862521-db99-4d6d-9b0a-b16f56a1b7e6/avaliacao"
-            );
+            const result = await axios.get(`http://localhost:3335/aluno/${user?.id}/avaliacao`);
 
             console.log(result.data.data);
             setAvaliacoes(result.data.data);
@@ -26,15 +44,24 @@ export const Home = () => {
         }
     };
 
+    const realizarLogout = () => {
+        localStorage.removeItem("user");
+        navigate("/login");
+    };
+
     return (
         <>
             <Header />
 
             <h1>Bem vindo!</h1>
             <h2>Lista de avaliações</h2>
-            <button onClick={listarAvaliacoes}>Atualizar lista</button>
+            <button onClick={() => listarAvaliacoes()}>Atualizar lista</button>
 
             <ListaAvaliacoes avaliacoes={avaliacoes} />
+
+            <br />
+
+            <button onClick={realizarLogout}>Sair</button>
         </>
     );
 };
