@@ -5,6 +5,7 @@ import { Avaliacao } from "../models/avaliacao.model";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { User } from "../models/user.model";
+import { Container } from "../components/Container";
 
 export const Home = () => {
     const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
@@ -49,24 +50,31 @@ export const Home = () => {
         navigate("/login");
     };
 
+    const criarAvaliacao = () => {
+        localStorage.removeItem("avaliacao");
+        navigate("/avaliacao");
+    };
+
     return (
         <>
             <Header />
 
-            <h1>Bem vindo!</h1>
-            <h2>Lista de avaliações</h2>
+            <Container>
+                <h1>Bem vindo!</h1>
+                <h2>Lista de avaliações</h2>
 
-            <ListaAvaliacoes avaliacoes={avaliacoes} />
+                <ListaAvaliacoes avaliacoes={avaliacoes} />
 
-            <br />
+                <br />
 
-            <div>
-                <button onClick={() => listarAvaliacoes()}>Atualizar lista</button>
-                <button onClick={() => navigate("/avaliacao")}>Criar nova avaliação</button>
-            </div>
-            <div>
-                <button onClick={realizarLogout}>Sair</button>
-            </div>
+                <div>
+                    <button onClick={() => listarAvaliacoes()}>Atualizar lista</button>
+                    <button onClick={criarAvaliacao}>Criar nova avaliação</button>
+                </div>
+                <div>
+                    <button onClick={realizarLogout}>Sair</button>
+                </div>
+            </Container>
         </>
     );
 };

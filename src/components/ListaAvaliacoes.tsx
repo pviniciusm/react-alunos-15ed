@@ -1,21 +1,26 @@
+import styled from "styled-components";
 import { Avaliacao } from "../models/avaliacao.model";
+import { CardAvaliacao } from "./CardAvaliacao";
 
 interface ListaAvaliacoesProps {
     avaliacoes: Avaliacao[];
 }
 
+const ListaContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    flex-wrap: wrap;
+`;
+
 export const ListaAvaliacoes = (props: ListaAvaliacoesProps) => {
     console.log(props);
 
     return (
-        <ul>
+        <ListaContainer>
             {props.avaliacoes.map((item) => {
-                return (
-                    <li key={item.id}>
-                        Disciplina: {item.disciplina} - Nota: {item.nota}
-                    </li>
-                );
+                return <CardAvaliacao key={item.id} avaliacao={item} />;
             })}
-        </ul>
+        </ListaContainer>
     );
 };
