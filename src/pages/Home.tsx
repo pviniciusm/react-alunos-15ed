@@ -4,24 +4,21 @@ import { ListaAvaliacoes } from "../components/ListaAvaliacoes";
 import { Avaliacao } from "../models/avaliacao.model";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { User } from "../models/user.model";
 import { Container } from "../components/Container";
+import { useAppSelector } from "../config/hooks";
 
 export const Home = () => {
     const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
-    const [user, setUser] = useState<User>();
+    const user = useAppSelector(state => state.user);
 
-    const usuarioLogado = localStorage.getItem("user");
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!usuarioLogado) {
+        if (!user) {
             alert("Sessão expirada, faça o login novamente!");
             navigate("/login");
             return;
         }
-
-        setUser(JSON.parse(usuarioLogado));
     }, []);
 
     useEffect(() => {
