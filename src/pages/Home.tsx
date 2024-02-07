@@ -5,11 +5,15 @@ import { Avaliacao } from "../models/avaliacao.model";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container } from "../components/Container";
-import { useAppSelector } from "../config/hooks";
+import { useAppDispatch, useAppSelector } from "../config/hooks";
+import { Button } from "@mui/material";
+import { Modal } from "../components/Modal";
+import { abrirModal } from "../config/modules/modal.slice";
 
 export const Home = () => {
-    const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
+    const avaliacoes = useAppSelector(state => state.avaliacoes);
     const user = useAppSelector(state => state.user);
+    const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
 
@@ -21,26 +25,26 @@ export const Home = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (!user) {
-            return;
-        }
+    // useEffect(() => {
+    //     if (!user) {
+    //         return;
+    //     }
 
-        listarAvaliacoes();
-    }, [user]);
+    //     listarAvaliacoes();
+    // }, [user]);
 
-    const listarAvaliacoes = async () => {
-        try {
-            const result = await axios.get(`http://localhost:3335/aluno/${user?.id}/avaliacao`);
+    // const listarAvaliacoes = async () => {
+    //     try {
+    //         const result = await axios.get(`http://localhost:3335/aluno/${user?.id}/avaliacao`);
 
-            console.log(result.data.data);
-            setAvaliacoes(result.data.data);
-        } catch (error: any) {
-            setAvaliacoes([]);
-            console.log(error);
-            alert("A requisição deu erro!");
-        }
-    };
+    //         console.log(result.data.data);
+    //         setAvaliacoes(result.data.data);
+    //     } catch (error: any) {
+    //         setAvaliacoes([]);
+    //         console.log(error);
+    //         alert("A requisição deu erro!");
+    //     }
+    // };
 
     const realizarLogout = () => {
         localStorage.removeItem("user");
@@ -48,8 +52,7 @@ export const Home = () => {
     };
 
     const criarAvaliacao = () => {
-        localStorage.removeItem("avaliacao");
-        navigate("/avaliacao");
+        dispatch(abrirModal());
     };
 
     return (
@@ -57,7 +60,8 @@ export const Home = () => {
             <Header />
 
             <Container>
-                <h1>Bem vindo!</h1>
+                <Modal />
+
                 <h2>Lista de avaliações</h2>
 
                 <ListaAvaliacoes avaliacoes={avaliacoes} />
@@ -65,8 +69,7 @@ export const Home = () => {
                 <br />
 
                 <div>
-                    <button onClick={() => listarAvaliacoes()}>Atualizar lista</button>
-                    <button onClick={criarAvaliacao}>Criar nova avaliação</button>
+                    <Button variant="contained" onClick={criarAvaliacao}>Criar nova avaliação</Button>
                 </div>
                 <div>
                     <button onClick={realizarLogout}>Sair</button>

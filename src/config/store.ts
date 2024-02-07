@@ -1,9 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { rootReducer } from "./rootReducer";
+import { persistedReducer } from "./rootReducer";
+import { persistStore } from "redux-persist";
 
 export const store = configureStore({
-    reducer: rootReducer,
+    reducer: persistedReducer,
+    middleware: (defaultMiddleware) => defaultMiddleware({
+        serializableCheck: false
+    })
 });
+
+export const persistedStore = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

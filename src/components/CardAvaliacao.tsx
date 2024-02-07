@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { Avaliacao } from "../models/avaliacao.model";
 import { Button } from "./Button";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../config/hooks";
+import { deletarAvaliacao } from "../config/modules/avaliacoes.slice";
 
 interface CardAvaliacaoProps {
     avaliacao: Avaliacao;
@@ -18,8 +20,11 @@ const CardAvaliacaoStyled = styled.div`
 
 export const CardAvaliacao = (props: CardAvaliacaoProps) => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
-    const deletarAvaliacao = () => {};
+    const deletarAvaliacaoCard = () => {
+        dispatch( deletarAvaliacao(props.avaliacao.id) )
+    };
 
     const atualizarAvaliacao = () => {
         localStorage.setItem("avaliacao", JSON.stringify(props.avaliacao));
@@ -31,7 +36,7 @@ export const CardAvaliacao = (props: CardAvaliacaoProps) => {
         <CardAvaliacaoStyled>
             <h2>{props.avaliacao.disciplina}</h2>
             <p>Nota: {props.avaliacao.nota}</p>
-            <Button onClick={deletarAvaliacao}>Deletar</Button>
+            <Button onClick={deletarAvaliacaoCard}>Deletar</Button>
             <Button onClick={atualizarAvaliacao}>Atualizar</Button>
         </CardAvaliacaoStyled>
     );
